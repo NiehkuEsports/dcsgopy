@@ -16,7 +16,9 @@ class Database(object):
 		c.execute('''CREATE TABLE port_range
 						(integer start, integer end, integer start_tv, integer end_tv)''')
 		c.execute('''INSERT INTO port_range VALUES ({}, {}, {}, {})'''.format(start, end, start_tv, end_tv))
-	
+
+		self.close()
+
 	def destroy(self):
 		os.remove(os.path.join(self.db_dir, 'dcsgodb.db'))
 
@@ -25,3 +27,17 @@ class Database(object):
 		if hasattr(self, '_conn'):
 			self._conn = sqllite3.connect(os.path.join(self.db_dir, 'dcsgodb.db'))
 		return self._conn
+
+	def close(self):
+		self.conn.close()
+		delattr(self, '_conn')
+
+	def get_port_range(self):
+		c = self.conn.cursor()
+		ports = c.execute("SELECT * FROM port_range")[0]
+		return {
+			'start': ports[0],
+			'end': ports[1],
+			'start_tv': ports[2]
+			'end_tv': ports[3]
+		}
