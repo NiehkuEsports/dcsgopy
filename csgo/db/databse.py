@@ -3,8 +3,8 @@ import os
 
 
 class Database(object):
-
 	db_dir = '/opt/dcsgopy/'
+	db_name = 'dcsgodb.db'
 
 	def create_db(self, start=27015, end=27019, start_tv=27020, end_tv=27023):
 
@@ -23,12 +23,12 @@ class Database(object):
 		self.close()
 
 	def destroy(self):
-		os.remove(os.path.join(self.db_dir, 'dcsgodb.db'))
+		os.remove(os.path.join(self.db_dir, self.db_name))
 
 	@property
 	def conn(self):
 		if hasattr(self, '_conn'):
-			self._conn = sqllite3.connect(os.path.join(self.db_dir, 'dcsgodb.db'))
+			self._conn = sqllite3.connect(os.path.join(self.db_dir, self.db_name))
 		return self._conn
 
 	def close(self):
